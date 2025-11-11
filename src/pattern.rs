@@ -3,6 +3,7 @@ use crate::errors::PatternError;
 enum Card {
     Digit,         // \d
     Literal(char), // abcdeAbcdzzz231237 etc
+    Alphanumeric, // \w
 }
 
 pub struct Pattern {
@@ -24,6 +25,10 @@ impl Pattern {
                         return Err(PatternError::NoClassFound);
                     }
                 }
+                '^' => unimplemented!("`^`"),
+                '$' => unimplemented!("`$`"),
+                '[' => unimplemented!("`[`"),
+                // literal
                 c => expression.push(Card::Literal(c)),
             }
         }
@@ -35,6 +40,7 @@ impl Pattern {
         match c {
             'd' => Card::Digit,
             '\\' => Card::Literal('\\'),
+            'w' => Card::Alphanumeric,
             another => panic!("not supported yet: {another}"),
         }
     }
@@ -56,6 +62,13 @@ impl Pattern {
                     }
                     Card::Literal(literal) => {
                         if literal == &input_char {
+                            return true;
+                        } else {
+                            continue;
+                        }
+                    }
+                    Card::Alphanumeric => {
+                        if input_char.is_ascii_alphanumeric() {
                             return true;
                         } else {
                             continue;
