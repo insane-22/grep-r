@@ -68,7 +68,7 @@ impl Pattern {
                         }
                     }
                     Card::Alphanumeric => {
-                        if input_char.is_alphanumeric() {
+                        if input_char.is_alphanumeric() || input_char == '_' {
                             return true;
                         } else {
                             continue;
